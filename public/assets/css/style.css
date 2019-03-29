@@ -1,0 +1,48 @@
+#wrapper {
+        width: 960px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-top: 5%;
+      }
+      #articles {
+        display: inline-block;
+        overflow: auto;
+        width: 60%;
+        height: 700px;
+      }
+      #notes {
+        float: right;
+        width: 30%;
+      }
+      textarea, input {
+        display: block;
+        width: 100%;
+        background-color: #FCF5C7;
+      }
+      input {
+        height: 36px;
+        font-size: 24px;
+      }
+      textarea {
+        height: 200px;
+        font-size: 18px;
+      }
+
+      .back_image{
+        background-image: url("../images/news.jpg") ;
+        background-repeat: no-repeat, repeat;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        height: 50%;        
+      }
+
+      .background-image{
+        height:70%;
+      }
+      footer{
+        color:white;
+        background-color: rgb(36, 35, 34);
+        padding: 8px;
+      }
