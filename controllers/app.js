@@ -50,7 +50,7 @@ router.get("/saved", (req, res) => {
 
 });
 
-
+//Clear all the scrapes
 
 router.get('/clear', function (req, res) {
   db.Article.remove({}, function (err, doc) {
@@ -71,6 +71,7 @@ router.get('/clear', function (req, res) {
 });
 
 
+//Scrape the news
 
 router.get("/scrape", function (req, res) {
   // First, we grab the body of the html with axios
@@ -129,6 +130,7 @@ router.get("/articles", function (req, res) {
     });
 });
 
+//Updating the saved article
 router.put("/save/:id", function (req, res) {
   db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: true })
     .then(function (data) {
@@ -141,26 +143,10 @@ router.put("/save/:id", function (req, res) {
     });;
 });
 
-/*router.put("/remove/:id", function (req, res) {
-  db.Article.findOneAndUpdate({ _id: req.params.id }, { saved: false })
-    .then(function (data) {
-      // If we were able to successfully find Articles, send them back to the client
-      res.json(data)
-    })
-    .catch(function (err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});*/
 //delete Article
 router.delete("/delete/:id", function (req, res) {
-
-
   db.Article.findOneAndUpdate({ _id: req.params.id }, { "saved": false }, { new: true })
-
-
-    .then(function (dbArticle) {
-      
+    .then(function (dbArticle) {      
       //res.redirect("/saved");
     })
     .catch(function (err) {
@@ -168,9 +154,7 @@ router.delete("/delete/:id", function (req, res) {
       console.log(err);
       res.send("Error occurred deleting article");
     });
-
 });
-
 
 
 // Route for grabbing a specific Article by id, populate it with it's note
@@ -188,8 +172,6 @@ router.get("/articles/:id", function (req, res) {
       res.json(err);
     });
 });
-
-
 
 
 // Route for saving/updating an Article's associated Note
@@ -212,6 +194,8 @@ router.post("/articles/:id", function (req, res) {
     });
 });
 
+//Saving note
+
 router.post("/note/:id", function (req, res) {
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
@@ -231,21 +215,24 @@ router.post("/note/:id", function (req, res) {
     });
 });
 
-router.delete("/note/:id", function (req, res) {
-  // Create a new note and pass the req.body to the entry
-  db.Note.findByIdAndRemove({ _id: req.params.id })
-    .then(function (dbNote) {
 
-      return db.Article.findOneAndUpdate({ note: req.params.id }, { $pullAll: [{ note: req.params.id }] });
+// Route for deleting/updating an Article's associated Note
+router.post("/del_note/:id/:noteid", function(req, res) {
+  // Create a new note and pass the req.body to the entry
+  db.Note.findByIdAndDelete(req.params.noteid)
+    .then(function(dbNote) {
+      // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+      // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+      return db.Article.findOneAndUpdate({ _id: req.params.id },{$pull: { notes: dbNote._id }}, { new: true });
     })
-    .then(function (dbArticle) {
+    .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
       res.json(dbArticle);
     })
-    .catch(function (err) {
+    .catch(function(err) {
       // If an error occurred, send it to the client
       res.json(err);
     });
 });
-
 module.exports = router;
