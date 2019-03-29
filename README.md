@@ -25,4 +25,4 @@ https://cryptic-springs-33632.herokuapp.com/
    
  
 
-![Screenshot](/public/assets/images/mongo_scraper.gif)
+![Screenshot](/public/assets/images/mongoScraper.gif)
