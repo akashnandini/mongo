@@ -64,7 +64,7 @@ $(document).ready(function () {
     var id = $(this).attr("data");
 
     console.log(id);
-    //$('#articleId').text(id);
+    $('#articleId').text(id);
     //$('#save-note').attr('data', id);
     $.ajax("/articles/"+id, {
       method: "GET"
